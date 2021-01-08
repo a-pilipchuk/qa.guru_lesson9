@@ -23,7 +23,7 @@ public class AttachmentsHelper {
     }
 
     public static String getConsoleLogs() {
-        return String.join("\n", Selenide.getWebDriverLogs((BROWSER)));
+        return String.join("\n", Selenide.getWebDriverLogs(BROWSER));
     }
 
     @Attachment(value = "Page source", type = "text/plain")
@@ -39,7 +39,7 @@ public class AttachmentsHelper {
     }
 
     public static String getVideoUrl() {
-        return "https://selenoid.autotests.cloud/video/" + getSessionId() + ".mp4";
+        return "https://" + System.getProperty("remote.browser.url")  + "/video/" + getSessionId() + ".mp4";
     }
 
     public static String getSessionId(){

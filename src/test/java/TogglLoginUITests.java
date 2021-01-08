@@ -1,6 +1,7 @@
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
+import io.qameta.allure.Step;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -14,27 +15,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TogglLoginUITests {
     @BeforeAll
-    static void setup(){
+    static void setup() {
         addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("enableVNC", true);
         capabilities.setCapability("enableVideo", true);
         Configuration.browserCapabilities = capabilities;
-        Configuration.remote = "https://user1:1234@selenoid.autotests.cloud:4444/wd/hub/";
+        //gradle test -Dremote.browser.url=selenoid.autotests.cloud
+        Configuration.remote = "https://user1:1234@" + System.getProperty("remote.browser.url") + ":4444/wd/hub/";
         Configuration.browserSize = "1400x1000";
         //Configuration.browser = FIREFOX;
     }
 
     @AfterEach
-    public void afterEach(){
-        attachScreenshot("");
+    @Step("Attachments")
+    public void afterEach() {
+        attachScreenshot("Last screenshot");
         attachPageSource();
         attachAsText("browser console log", getConsoleLogs());
         attachVideo();
         closeWebDriver();
     }
 
-    @Tag("UI_test")
     @Test
     @DisplayName("Successful login")
     void TogglPositiveLoginTest() {
@@ -57,7 +59,6 @@ public class TogglLoginUITests {
         });
     }
 
-    @Tag("UI_test")
     @Test
     @DisplayName("Unsuccessful login")
     void TogglNegativeLoginTest() {
